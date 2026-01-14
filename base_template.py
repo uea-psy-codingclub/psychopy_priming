@@ -6,9 +6,11 @@ from psychopy import visual, monitors, sound, core, event, gui, logging
 import pandas as pd
 
 def experimenter_input_popup():
-    #THIS IS A STUB
-    return
-
+    ppt_number = input("Participant Number:")
+        # if ppt_number = int continue
+        else:
+            print("Error")
+# settings - counterbalancing? randomisation?            
 
 def read_trial_info():
     # THIS IS A STUB
