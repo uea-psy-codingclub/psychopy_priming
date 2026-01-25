@@ -7,9 +7,9 @@ import pandas as pd
 
 def experimenter_input_popup():
     ppt_number = input("Participant Number:")
-        # if ppt_number = int continue
+        if ppt_number = int continue
         else:
-            print("Error")
+            print("Error - please enter an integer")
 # settings - counterbalancing? randomisation?            
 
 def read_trial_info():
