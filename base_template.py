@@ -6,11 +6,25 @@ from psychopy import visual, monitors, sound, core, event, gui, logging
 import pandas as pd
 
 def experimenter_input_popup():
-    ppt_number = input("Participant Number:")
-        if ppt_number = int continue
-        else:
-            print("Error - please enter an integer")
-# settings - counterbalancing? randomisation?            
+# ppt number pop-up
+try:
+    ppt_number = int(input("Participant Number:"))
+except ValueError:    
+    print("Error - please enter an integer")
+else:
+# move to next section of code
+    next()
+    
+# experimenter option input
+    option_input = str(input("Experiment Option (A or B):"))
+if option_input = "A"
+    next()
+elif option_input = "B"
+    next()
+else print("Error - please enter either A or B")
+
+# start button
+
 
 def read_trial_info():
     # THIS IS A STUB
