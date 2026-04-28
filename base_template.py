@@ -4,6 +4,8 @@
 import os
 from psychopy import visual, monitors, sound, core, event, gui, logging
 import pandas as pd
+# is import below needed? (for buttons)
+from tkinter import *
 
 def experimenter_input_popup():
 # ppt number pop-up
@@ -23,8 +25,14 @@ elif option_input = "B"
     next()
 else print("Error - please enter either A or B")
 
-# start button
+# start button - does tkinter exist in GitHub?
+def click():
+    continue
 
+window = Tk()
+start_button = Button(window, text="Start", command=click)
+start_button.pack()
+window.mainloop()
 
 def read_trial_info():
     # THIS IS A STUB
