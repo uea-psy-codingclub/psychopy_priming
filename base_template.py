@@ -51,9 +51,7 @@ def run_trial():
     #avails itself of Psychopy-ish things like win.Flip and core.clock
     #gives an ESC option
     #returns an object called "data" which seems a bit like a dataframe but it thinks its class is "dictionary"
-    
-def run_trial(this_trial):
-    
+       
     # -------------------------------
     # Timing settings, in seconds
     # -------------------------------
