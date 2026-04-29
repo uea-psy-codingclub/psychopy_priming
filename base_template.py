@@ -35,22 +35,17 @@ start_button.pack()
 window.mainloop()
 
 def read_trial_info():
-    # THIS IS A STUB
     # reads a csv file with information and returns it as pandas dataframe trialinfo
-    trialinfo=pd.DataFrame() #replace this, should be read from csv
-        #Tom note for whoever writes this...code in run_trial() assumes following
-        #Expected columns in trialinfo:
-        #prime             - the prime stimulus text
-        #target            - the target stimulus text
-        #target_type       - "word" or "nonword"/"non-word"
-        #condition         - optional condition label
-        #correct_response  - the correct key for word trials, e.g. "left" or "right"
-        #Non-word target trials are recorded but marked as ignored for accuracy/scoring.
-    
-    return trialinfo
+    #trialinfo=pd.DataFrame() #replace this, should be read from csv
+        #Tom note for whoever writes this bit...code in run_trial() assumes...
+        # a csv proposed by Nadja with fields PrimeWord; PrimeFile; TargetWord; Delay(ms); Relatedness. 
+        #Relatedness codes: REL = related word target, UNR = unrelated word target,NW  = non-word target
+        #It assumes also that csv will also have a field called CorrectResponse
+        #The experimenter option input bit above is neglected (I don't know what this represents) and is not currently returned in data{}
+    #This is a stub
+return trialinfo
 
 def run_trial():
-
     #Tom....AI provided this
     #Um seems that this function looks in this_trial() indexing by column header names
     #Creates stimuli using the inbuilt visual.TextStim()
@@ -58,12 +53,12 @@ def run_trial():
     #gives an ESC option
     #returns an object called "data" which seems a bit like a dataframe but it thinks its class is "dictionary"
     
+def run_trial(this_trial):
+    
     # -------------------------------
     # Timing settings, in seconds
     # -------------------------------
     fixation_duration = 0.5
-    prime_duration = 0.2
-    blank_duration = 0.1
     target_duration = 2.0
 
     response_keys = ["left", "right", "escape"]
@@ -71,26 +66,22 @@ def run_trial():
     # -------------------------------
     # Get trial information
     # -------------------------------
-    prime_text = str(this_trial["prime"])
-    target_text = str(this_trial["target"])
+    prime_audio_file = str(this_trial["PrimeFile"])
+    target_text = str(this_trial["TargetWord"])
+    relatedness = str(this_trial["Relatedness"]).upper()  
 
-    if "target_type" in this_trial:
-        target_type = str(this_trial["target_type"]).lower()
-    else:
-        target_type = "word"
+    delay_ms = float(this_trial["Delay(ms)"])
+    blank_duration = delay_ms / 1000.0 # Tom seems to want to represent the delay in seconds not ms. 
 
-    if "condition" in this_trial:
-        condition = this_trial["condition"]
-    else:
-        condition = ""
-
-    if "correct_response" in this_trial:
-        correct_response = str(this_trial["correct_response"])
+    if "CorrectResponse" in this_trial:
+        correct_response = str(this_trial["CorrectResponse"])
     else:
         correct_response = ""
 
     # Decide whether this trial should be scored
-    if target_type in ["nonword", "non-word", "non_word"]:
+    #Non-word target trials are recorded but marked as ignored for accuracy/scoring. 
+    #This came for free but can be taken out to shorten code and done manually at data analysis
+    if relatedness == "NW":
         score_trial = False
     else:
         score_trial = True
@@ -105,13 +96,6 @@ def run_trial():
         height=40
     )
 
-    prime_stim = visual.TextStim(
-        win,
-        text=prime_text,
-        color="white",
-        height=40
-    )
-
     target_stim = visual.TextStim(
         win,
         text=target_text,
@@ -119,47 +103,54 @@ def run_trial():
         height=40
     )
 
+    prime_sound = sound.Sound(prime_audio_file)
+
     # -------------------------------
     # Fixation
     # -------------------------------
     fixation.draw()
     win.flip()
     core.wait(fixation_duration)
+    #Tom no instruction to clear fix cross so I assume it remains while audio prime below plays
 
     # -------------------------------
-    # Prime
+    # Auditory prime
     # -------------------------------
-    prime_stim.draw()
     win.flip()
-    core.wait(prime_duration)
+    prime_sound.play()
+
+    # Wait until the audio prime has finished playing
+    core.wait(prime_sound.getDuration()) #This needs audio files to have no trailing silence at their end
 
     # -------------------------------
-    # Blank screen
+    # Delay between prime and target
     # -------------------------------
     win.flip()
     core.wait(blank_duration)
+    #There’s been no instruction to clear the fix cross so “blank_duration" is not a very useful term.
+    #Keep for the moment but the original Delay(ms) was better
 
     # -------------------------------
-    # Target and response collection
+    # Visual target and response collection
     # -------------------------------
-    event.clearEvents()
+    event.clearEvents() #I assume a clear screen command
 
     target_stim.draw()
     win.flip()
 
-    response_clock = core.Clock()
+    response_clock = core.Clock() #I guess for internal timing reasons you win.flip then start counting…. 
 
     keys = event.waitKeys(
         maxWait=target_duration,
         keyList=response_keys,
-        timeStamped=response_clock
+        timeStamped=response_clock #Syntax of how the RT is worked out is a bit unclear to me, needs checking
     )
 
     # -------------------------------
     # Process response
     # -------------------------------
     if keys:
-        response, reaction_time = keys[0]
+        response, reaction_time = keys[0]  #Syntax here very unclear to me, I would need to work through this to make sure its as intended
 
         if response == "escape":
             win.close()
@@ -186,23 +177,21 @@ def run_trial():
     # Store trial data
     # -------------------------------
     data = {
-        "prime": prime_text,
-        "target": target_text,
-        "target_type": target_type,
-        "condition": condition,
-        "correct_response": correct_response,
+        "PrimeFile": prime_audio_file,
+        "TargetWord": target_text,
+        "Relatedness": relatedness,
+        "Delay(ms)": delay_ms,
+        "CorrectResponse": correct_response,
         "response": response,
         "reaction_time": reaction_time,
         "accuracy": accuracy,
         "ignored": ignored
     }
-
+    #Not all of the above need necessarily be re-represented in data{}
     return data
 
-    # Tom...question: how well did AI do Nadja?
-
 def store_data(data):
-    #input is data <type to be defined> #Tom I belive I am offering you a "dictionary" data type
+    #input is data <type to be defined> #Tom note to whoever dors this I belive I am offering you a "dictionary" data type
     # THIS IS A STUB
 
     return
