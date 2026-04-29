@@ -35,7 +35,8 @@ start_button.pack()
 window.mainloop()
 
 def read_trial_info():
-    # reads a csv file with information and returns it as pandas dataframe trialinfo
+# reads a csv file with information and returns it as pandas dataframe trialinfo
+    #This tab is very important
     #trialinfo=pd.DataFrame() #replace this, should be read from csv
         #Tom note for whoever writes this bit...code in run_trial() assumes...
         # a csv proposed by Nadja with fields PrimeWord; PrimeFile; TargetWord; Delay(ms); Relatedness. 
@@ -43,7 +44,20 @@ def read_trial_info():
         #It assumes also that csv will also have a field called CorrectResponse
         #The experimenter option input bit above is neglected (I don't know what this represents) and is not currently returned in data{}
     #This is a stub
-return trialinfo
+
+def read_trial_info():
+    """
+    The CSV file should be in the same folder as this Python script.
+    Expected columns:
+        PrimeWord
+        PrimeFile
+        TargetWord
+        Delay(ms)
+        Relatedness
+        CorrectResponse
+    """
+    trialinfo = pd.read_csv("Nadjastimuli.csv")
+    return trialinfo
 
 def run_trial():
     #Tom....AI provided this
